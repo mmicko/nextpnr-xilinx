@@ -42,6 +42,20 @@ jobs:
         build_yosys
       if: steps.cache-yosys.outputs.cache-hit != 'true'
    
+    - name: Cache prjxray installation
+      uses: actions/cache@v3
+      id: cache-prjxray
+      with:
+        path: .prjxray
+        key: cache-prjxray-${{ env.PRJXRAY_REVISION }}-r3
+      if: matrix.arch == 'xilinx'
+
+    - name: Build prjxray
+      run: |
+        source ./.github/ci/build_common.sh
+        build_prjxray
+      if: matrix.arch == 'xilinx' && steps.cache-prjxray.outputs.cache-hit != 'true'
+
     - name: Execute build nextpnr
       run: |
         source ./.github/ci/build_${{ matrix.arch }}.sh
