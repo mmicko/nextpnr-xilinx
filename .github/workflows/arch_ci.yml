@@ -1,0 +1,65 @@
+# CI for everything other than the sui generis FPGA interchange arrangements
+
+name: Arch CI tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build-nextpnr:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [xilinx]
+    runs-on: ubuntu-latest
+    env:
+      DEPS_PATH: ${{ github.workspace }}/deps
+      YOSYS_REVISION: bd7ee79486d4e8788f36de8c25a3fb2df451d682
+      PRJXRAY_REVISION: 8aa91fa11559609a21bcb4de0933663c973c3ed7
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install
+      run: |
+        sudo apt-get update
+        sudo apt-get install git make cmake libboost-all-dev python3-dev libeigen3-dev tcl-dev lzma-dev libftdi-dev clang bison flex swig qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools iverilog
+
+    - name: Cache yosys installation
+      uses: actions/cache@v3
+      id: cache-yosys
+      with:
+        path: .yosys
+        key: cache-yosys-${{ env.YOSYS_REVISION }}-r3
+
+    - name: Build yosys
+      run: |
+        source ./.github/ci/build_common.sh
+        build_yosys
+      if: steps.cache-yosys.outputs.cache-hit != 'true'
+   
+    - name: Cache prjxray installation
+      uses: actions/cache@v3
+      id: cache-prjxray
+      with:
+        path: .prjxray
+        key: cache-prjxray-${{ env.PRJXRAY_REVISION }}-r3
+      if: matrix.arch == 'xilinx'
+
+    - name: Build prjxray
+      run: |
+        source ./.github/ci/build_common.sh
+        build_prjxray
+      if: matrix.arch == 'xilinx' && steps.cache-prjxray.outputs.cache-hit != 'true'
+
+    - name: Execute build nextpnr
+      run: |
+        source ./.github/ci/build_${{ matrix.arch }}.sh
+        get_dependencies
+        build_nextpnr
+        run_tests
+        run_archcheck
