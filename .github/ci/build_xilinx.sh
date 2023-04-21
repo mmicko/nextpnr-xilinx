@@ -17,6 +17,7 @@ function run_tests {
     pushd xilinx/examples/arty-a35
     export XRAY_UTILS_DIR=${XRAY_DIR}/utils
     export XRAY_TOOLS_DIR=${XRAY_DIR}/tools
+    head -n -10 ${XRAY_UTILS_DIR}/environment.sh > ${XRAY_UTILS_DIR}/environment.sh.new && mv ${XRAY_UTILS_DIR}/environment.sh.new ${XRAY_UTILS_DIR}/environment.sh
     bash blinky.sh
     bash attosoc.sh
     popd
