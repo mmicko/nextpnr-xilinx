@@ -13,7 +13,15 @@ function build_nextpnr {
 }
 
 function run_tests {
-    :
+    export XRAY_DIR=`pwd`/.prjxray
+    python3 xilinx/python/bbaexport.py --device xc7a35tcsg324-1 --bba xilinx/xc7a35t.bba
+    ./bba/bbasm --l xilinx/xc7a35t.bba xilinx/xc7a35t.bin 
+    pushd xilinx/examples/arty-a35
+    export XRAY_UTILS_DIR=${XRAY_DIR}/utils
+    export XRAY_TOOLS_DIR=${XRAY_DIR}/tools
+    sh blinky.sh
+    sh attosoc.sh
+    popd
 }
 
 function run_archcheck {
