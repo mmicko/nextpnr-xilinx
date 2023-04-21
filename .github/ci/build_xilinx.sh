@@ -8,7 +8,7 @@ function build_nextpnr {
     mkdir build
     pushd build
     cmake .. -DARCH=xilinx -DBUILD_GUI=on -DUSE_IPO=off
-    make nextpnr-xilinx -j`nproc`
+    make bbasm nextpnr-xilinx -j`nproc`
     popd
 }
 
