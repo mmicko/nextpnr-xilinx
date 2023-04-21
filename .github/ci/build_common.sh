@@ -55,7 +55,7 @@ function build_prjoxide {
 }
 
 function build_prjxray {
-    PRJXRAY_PATH=${DEPS_PATH}/.prjxray
+    PRJXRAY_PATH=`pwd`/.prjxray
     mkdir -p ${PRJXRAY_PATH}
     git clone --recursive https://github.com/f4pga/prjxray ${PRJXRAY_PATH}
     pushd ${PRJXRAY_PATH}
