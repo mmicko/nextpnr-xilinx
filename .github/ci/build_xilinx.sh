@@ -5,11 +5,8 @@ function get_dependencies {
 }
 
 function build_nextpnr {
-    mkdir build
-    pushd build
-    cmake .. -DARCH=xilinx -DBUILD_GUI=on -DUSE_IPO=off
+    cmake . -DARCH=xilinx -DBUILD_GUI=on -DUSE_IPO=off
     make bbasm nextpnr-xilinx -j`nproc`
-    popd
 }
 
 function run_tests {
