@@ -13,7 +13,9 @@ function build_nextpnr {
 }
 
 function run_tests {
+    :
 }
 
 function run_archcheck {
+    :
 }
