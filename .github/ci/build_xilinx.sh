@@ -17,8 +17,8 @@ function run_tests {
     pushd xilinx/examples/arty-a35
     export XRAY_UTILS_DIR=${XRAY_DIR}/utils
     export XRAY_TOOLS_DIR=${XRAY_DIR}/tools
-    sh blinky.sh
-    sh attosoc.sh
+    bash blinky.sh
+    bash attosoc.sh
     popd
 }
 
